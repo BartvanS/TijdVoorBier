@@ -7,7 +7,7 @@ import {
     AsyncStorage,
     Text,
 } from 'react-native';
-import {WebBrowser} from 'expo';
+import {checkTime} from './classes/funtions';
 
 export default class HomeScreen extends React.Component {
     constructor(props) {
@@ -24,7 +24,6 @@ export default class HomeScreen extends React.Component {
     };
 
     componentDidMount() {
-        // this._retrieveData();
     }
 
     render() {
@@ -42,14 +41,14 @@ export default class HomeScreen extends React.Component {
         let date = new Date();
         let hours = date.getHours();
         let minutes = date.getMinutes();
-        hours = this.checkTime(hours);
-        minutes = this.checkTime(minutes);
+        hours = checkTime(hours);
+        minutes = checkTime(minutes);
         console.log(hours, minutes);
         let timeHuman = hours + ":" + minutes;
         // let time = hours+minutes;
         let correctHours =  this.state.allowedHours <= hours;
         let correctMinuts = null;
-        if (hours == this.state.allowedHours){
+        if (hours === this.state.allowedHours){
             if (minutes >= this.state.allowedMinutes ){
                 correctMinuts = true;
             }else {
@@ -67,15 +66,7 @@ export default class HomeScreen extends React.Component {
         //Ten eerste is het altijd tijd voor bier! Echter zegt mijn baas anders. Volgens hem is het: <span>" + time + "</span>
     }
 
-    checkTime(t) {
-        if (t < 10) {
-            t = "0" + t;
-        }
-        return t;
-    }
-
-
-    _retrieveData = async () => {
+        _retrieveData = async () => {
         try {
             const value = await AsyncStorage.getItem('allowedTime');
             if (value !== null) {
