@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View, Text, Button, TextInput} from "react-native";
 import TimePicker from 'react-native-simple-time-picker';
-import {checkTime} from '../classes/funtions';
+import {checkTime, clearConsole} from '../classes/funtions';
 const HOST = 'http://192.168.2.17:8080';
 // const HOST = 'localhost:8080';
 
@@ -9,11 +9,31 @@ export default class UpdateBeerTime extends React.Component {
 
     constructor(props) {
         super(props);
+        clearConsole();
+        this.getBeerTime();
         this.state = {
-            beerTime: '17:30',
+            beerTime: '07:30',
             selectedHours: 17,
             selectedMinutes: 30,
+            userId: 51,
         }
+    }
+
+
+    getBeerTime(){
+        fetch(HOST + '/getBeerTime', {
+            method: 'GET',
+                   })
+            .then(function (response) {
+                // console.log(response);
+                return response;
+            })
+            .then(function (myJson) {
+                console.log(JSON.stringify(myJson._bodyText));
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
     handleBeerTime(text) {
