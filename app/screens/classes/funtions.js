@@ -20,3 +20,6 @@ export function clearConsole() {
     console.log('-----------------------------------------------------------------------------------------------------------')
 
 }
+export function log(val) {
+    console.log(val);
+}
