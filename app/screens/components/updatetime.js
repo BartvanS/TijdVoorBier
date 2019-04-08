@@ -1,64 +1,61 @@
 import React from 'react';
-import {StyleSheet, View, Text, Button, TextInput, AsyncStorage} from "react-native";
+import {StyleSheet, View, Text, Button, Picker, AsyncStorage} from "react-native";
 import TimePicker from 'react-native-simple-time-picker';
 import {checkTime, clearConsole, log} from '../classes/funtions';
 
 const HOST = 'http://192.168.2.21:8080';
 // const HOST = 'http://localhost:8080';
 
-export default class UpdateBeerTime extends React.Component {
+export default class UpdateTime extends React.Component {
 
     constructor(props) {
         super(props);
         clearConsole();
-        this.getBeerTime();
+        //todo: gesette biertijd ophalen en kunnen instellen voor elke dag van de week?
+
+        // this.getBeerTime();
         this.state = {
             beerTime: '07:30',
             selectedHours: 17,
             selectedMinutes: 30,
+            day: 'monday',
         }
     }
 
 
-    getBeerTime() {
-        fetch(HOST + '/getBeerTime', {
-            method: 'GET',
-        })
-            .then(function (response) {
-                // console.log(response);
-                return response;
-            })
-            .then(function (myJson) {
-                console.log(JSON.stringify(myJson._bodyText));
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    }
-
     async handleSubmit() {
-        await this._setstate();
-        // let token = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        // log(token);
-        // let data = this.state;
-        // data['userToken'] = token;
-        //
-        // fetch(HOST + '/saveBeerTime', {
-        //     method: 'POST',
-        //     body: JSON.stringify(data), // data can be `string` or {object}!
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     }
-        // }).then(function (response) {
-        //     return response;
-        // }).then(function (myJson) {
-        //     // console.log(JSON.stringify(myJson));
-        // }).catch((error) => {
-        //     console.error(error);
-        // });
+        log(this.state.day);
+        let key = this.state.day;
+        await this._setState();
+        this._storeData(this.state.selectedHours, this.state.selectedMinutes, key)
+            .then(UpdateTime._getData(key));
     }
 
-    async _setstate() {
+    async _storeData(selectedHours, selectedMinutes, key) {
+        log(this.state.beerTime)
+        try {
+            await AsyncStorage.setItem(key, this.state.beerTime);
+        } catch (error) {
+            // Error saving data
+        }
+    };
+
+    static async _getData(key) {
+        try {
+            const value = await AsyncStorage.getItem(key);
+            if (value !== null) {
+                // We have data!!
+                // console.log(value);
+                return value;
+            } else {
+                return '17:30';
+            }
+        } catch (error) {
+            // Error retrieving data
+        }
+    }
+
+    async _setState() {
         let selectedHours = this.state.selectedHours;
         let selectedMinutes = this.state.selectedMinutes;
         let formattedHours = checkTime(selectedHours);
@@ -71,13 +68,10 @@ export default class UpdateBeerTime extends React.Component {
         });
     }
 
+
     render() {
         return (
             <React.Fragment>
-                {/*<TextInput*/}
-                    {/*placeholder={"Type hier de toegestane tijd in in HH:MM"}*/}
-                    {/*onChangeText={(text) => this.handleBeerTime(text)}*/}
-                {/*/>*/}
                 <View>
                     <Text>{this.state.selectedHours}:{this.state.selectedMinutes}</Text>
                     <TimePicker
@@ -85,6 +79,20 @@ export default class UpdateBeerTime extends React.Component {
                         selectedMinutes={parseInt(this.state.selectedMinutes)}
                         onChange={(hours, minutes) => this.setState({selectedHours: hours, selectedMinutes: minutes})}
                     />
+                    <Picker
+                        selectedValue={this.state.day}
+                        // style={{height: 50, width: 100}}
+                        onValueChange={(day, itemIndex) =>
+                            this.setState({day: day})
+                        }>
+                        <Picker.Item label="Maandag" value="monday"/>
+                        <Picker.Item label="Dinsdag" value="thursday"/>
+                        <Picker.Item label="Woensdag" value="wednesday"/>
+                        <Picker.Item label="Donderdag" value="thursday"/>
+                        <Picker.Item label="Vrijdag" value="friday"/>
+                        <Picker.Item label="Zaterdag" value="saturday"/>
+                        <Picker.Item label="Zondag" value="sunday"/>
+                    </Picker>
                     <Button title={'Voer tijd in'} onPress={() => this.handleSubmit()}/>
 
                 </View>
