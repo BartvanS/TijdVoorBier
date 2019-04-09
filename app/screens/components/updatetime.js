@@ -45,7 +45,6 @@ export default class UpdateTime extends React.Component {
             const value = await AsyncStorage.getItem(key);
             if (value !== null) {
                 // We have data!!
-                // console.log(value);
                 return value;
             } else {
                 return '17:30';
@@ -83,10 +82,10 @@ export default class UpdateTime extends React.Component {
                         selectedValue={this.state.day}
                         // style={{height: 50, width: 100}}
                         onValueChange={(day, itemIndex) =>
-                            this.setState({day: day})
+                            this.setState({day: day,})
                         }>
                         <Picker.Item label="Maandag" value="monday"/>
-                        <Picker.Item label="Dinsdag" value="thursday"/>
+                        <Picker.Item label="Dinsdag" value="tuesday"/>
                         <Picker.Item label="Woensdag" value="wednesday"/>
                         <Picker.Item label="Donderdag" value="thursday"/>
                         <Picker.Item label="Vrijdag" value="friday"/>

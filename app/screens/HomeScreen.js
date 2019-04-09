@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-    StyleSheet,
-    View,
-    Button,
-    Alert,
-    AsyncStorage,
-    Text,
-    Share,
-} from 'react-native';
-import {checkTime, log} from './classes/funtions';
+import {Alert, Button, Share, StyleSheet, Text, View,} from 'react-native';
+import {checkTime} from './classes/funtions';
 import UpdateTime from "./components/updatetime";
 
 export default class HomeScreen extends React.Component {
@@ -20,6 +12,7 @@ export default class HomeScreen extends React.Component {
             allowedMinutes: 30,
             // allowedTime: null,
         }
+        this.date = new Date();
     }
 
     static navigationOptions = {
@@ -27,58 +20,63 @@ export default class HomeScreen extends React.Component {
     };
 
     componentDidMount() {
-        this.getData();
+        // this.getData();
     }
 
-    IsItTimeYet() {
-        let date = new Date();
+    async IsItTimeYet() {
+        let date = this.date;
         let hours = date.getHours();
         let minutes = date.getMinutes();
         hours = checkTime(hours);
         minutes = checkTime(minutes);
-        console.log(hours, minutes);
         let timeHuman = hours + ":" + minutes;
         // let time = hours+minutes;
+        console.log('timecheck hours');
         let correctHours = this.state.allowedHours <= hours;
-        let correctMinuts = null;
+        let correctMinutes = null;
         if (hours === this.state.allowedHours) {
-            correctMinuts = minutes >= this.state.allowedMinutes;
+            correctMinutes = minutes >= this.state.allowedMinutes;
         } else {
-            correctMinuts = true;
+            correctMinutes = true;
         }
-        if (correctHours && correctMinuts) {
+        if (correctHours && correctMinutes) {
             return Alert.alert("Het is: " + timeHuman + " dus ja! HET IS ZOVER!");
         } else {
-            console.log(this.state.allowedHours, this.state.allowedMinutes);
+            // console.log(this.state.allowedHours, this.state.allowedMinutes);
             return Alert.alert("Wel yes, but actually no");
         }
         //Ten eerste is het altijd tijd voor bier! Echter zegt mijn baas anders. Volgens hem is het: <span>" + time + "</span>
     }
 
-    getData() {
-        let date = new Date();
+    async getData() {
+        let date = this.date;
         let todayInt = date.getDay();
-        let week = ['monday', 'thursday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        let week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         let europeanWeekday = todayInt - 1;
         let today = week[europeanWeekday];
-        UpdateTime._getData(today)
-        .then((response) => this.setData(response))
+        // let today = week[3];
+        return UpdateTime._getData(today);
+        // .then((response) => {
+        //     this.setData(response);
+        //     log(response, 'fokking response getdata');
+        // })
     }
 
-    setData(response){
+    async setData(response) {
         let hours = response.substring(0, 2);
         let minutes = response.substring(3, 5);
-        console.log(response, 'Biertijd van vandaag');
         this.setState({
-                allowedHours: hours,
-                allowedMinutes: minutes,
-            });
+            allowedHours: hours,
+            allowedMinutes: minutes,
+        }, () => {
+            console.log('set time: ', this.state.allowedHours, this.state.allowedMinutes)
+        });
     }
 
-    share(message){
+    share(message) {
         Share.share({
             message:
-                message,
+            message,
         });
     }
 
@@ -86,9 +84,19 @@ export default class HomeScreen extends React.Component {
 
         return (
             <View style={styles.container}>
-                <Button title={'Is het al tijd voor bier?'} onPress={() => this.IsItTimeYet()}/>
-                <Button title={'checksettime'} onPress={() => this.getData()}/>
-                <Button title={'share'} onPress={() => this.share('Hey, ik ben nu een biertje aan het drinken! Doe je mee? klink! 🍻')}/>
+                <Button title={'Is het al tijd voor bier?'} onPress={() => {
+                    //todo: zorg er voor dat getdata eerst data haalt dan set en dan vraagt of het tijd is
+
+                    this.getData()
+                        .then(response => {
+                            this.setData(response)
+                                .then(this.IsItTimeYet());
+                        })
+                        .then(() => console.log(this.state.allowedHours))
+                }}/>
+                {/*<Button title={'checksettime'} onPress={() => this.getData()}/>*/}
+                <Button title={'share'}
+                        onPress={() => this.share('Hey, ik ben nu een biertje aan het drinken! Doe je mee? klink! 🍻')}/>
 
                 <Text>{this.state.allowedTime}</Text>
             </View>
