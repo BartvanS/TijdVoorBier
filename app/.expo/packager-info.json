@@ -1,9 +1,9 @@
 {
-  "packagerPort": 19001,
-  "packagerPid": 10520,
-  "expoServerNgrokUrl": "https://53-d9m.anonymous.app.exp.direct",
-  "packagerNgrokUrl": "https://packager.53-d9m.anonymous.app.exp.direct",
-  "ngrokPid": 4224,
+  "expoServerPort": 19000,
+  "expoServerNgrokUrl": "https://qq-8ur.anonymous.app.exp.direct",
+  "packagerNgrokUrl": "https://packager.qq-8ur.anonymous.app.exp.direct",
+  "ngrokPid": 19588,
   "devToolsPort": 19002,
-  "expoServerPort": 19000
+  "packagerPort": 19001,
+  "packagerPid": 18616
 }

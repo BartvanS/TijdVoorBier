@@ -29,7 +29,7 @@ app.get('/getBeerTime', auth('tokentextjajajaja'), function (req, res) {
 });
 
 
-const PORT = 8080;
+const PORT = 808080;
 app.listen(PORT, () => {
     console.log(`server running on port ${PORT}`)
 });
