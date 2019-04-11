@@ -22,7 +22,6 @@ export default class UpdateTime extends React.Component {
         }
     }
 
-
     async handleSubmit() {
         log(this.state.day);
         let key = this.state.day;
@@ -32,7 +31,7 @@ export default class UpdateTime extends React.Component {
     }
 
     async _storeData(selectedHours, selectedMinutes, key) {
-        log(this.state.beerTime)
+        log(this.state.beerTime);
         try {
             await AsyncStorage.setItem(key, this.state.beerTime);
         } catch (error) {
@@ -70,32 +69,28 @@ export default class UpdateTime extends React.Component {
 
     render() {
         return (
-            <React.Fragment>
-                <View>
-                    <Text>{this.state.selectedHours}:{this.state.selectedMinutes}</Text>
-                    <TimePicker
-                        selectedHours={parseInt(this.state.selectedHours)}
-                        selectedMinutes={parseInt(this.state.selectedMinutes)}
-                        onChange={(hours, minutes) => this.setState({selectedHours: hours, selectedMinutes: minutes})}
-                    />
-                    <Picker
-                        selectedValue={this.state.day}
-                        // style={{height: 50, width: 100}}
-                        onValueChange={(day, itemIndex) =>
-                            this.setState({day: day,})
-                        }>
-                        <Picker.Item label="Maandag" value="monday"/>
-                        <Picker.Item label="Dinsdag" value="tuesday"/>
-                        <Picker.Item label="Woensdag" value="wednesday"/>
-                        <Picker.Item label="Donderdag" value="thursday"/>
-                        <Picker.Item label="Vrijdag" value="friday"/>
-                        <Picker.Item label="Zaterdag" value="saturday"/>
-                        <Picker.Item label="Zondag" value="sunday"/>
-                    </Picker>
-                    <Button title={'Voer tijd in'} onPress={() => this.handleSubmit()}/>
-
-                </View>
-            </React.Fragment>
+            <View>
+                <Text>{this.state.selectedHours}:{this.state.selectedMinutes}</Text>
+                <TimePicker
+                    selectedHours={parseInt(this.state.selectedHours)}
+                    selectedMinutes={parseInt(this.state.selectedMinutes)}
+                    onChange={(hours, minutes) => this.setState({selectedHours: hours, selectedMinutes: minutes})}
+                />
+                <Picker
+                    selectedValue={this.state.day}
+                    onValueChange={(day, itemIndex) =>
+                        this.setState({day: day,})
+                    }>
+                    <Picker.Item label="Maandag" value="monday"/>
+                    <Picker.Item label="Dinsdag" value="tuesday"/>
+                    <Picker.Item label="Woensdag" value="wednesday"/>
+                    <Picker.Item label="Donderdag" value="thursday"/>
+                    <Picker.Item label="Vrijdag" value="friday"/>
+                    <Picker.Item label="Zaterdag" value="saturday"/>
+                    <Picker.Item label="Zondag" value="sunday"/>
+                </Picker>
+                <Button title={'Voer tijd in'} onPress={() => this.handleSubmit()}/>
+            </View>
         );
     }
 }

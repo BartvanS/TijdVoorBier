@@ -1,9 +1,9 @@
 {
-  "expoServerPort": 19000,
-  "expoServerNgrokUrl": "https://qq-8ur.anonymous.app.exp.direct",
-  "packagerNgrokUrl": "https://packager.qq-8ur.anonymous.app.exp.direct",
-  "ngrokPid": 19588,
+  "packagerPort": null,
+  "packagerPid": null,
+  "expoServerNgrokUrl": null,
+  "packagerNgrokUrl": null,
+  "ngrokPid": null,
   "devToolsPort": 19002,
-  "packagerPort": 19001,
-  "packagerPid": 18616
+  "expoServerPort": null
 }

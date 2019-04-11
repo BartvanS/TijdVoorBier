@@ -1,11 +1,18 @@
 import React from 'react';
-import {Alert, AsyncStorage, Button, Share, StyleSheet, Text, View,} from 'react-native';
+import {
+    Alert,
+    Button,
+    Share,
+    StyleSheet,
+    Text,
+    View,
+    ImageBackground
+} from 'react-native';
 import {checkTime} from './classes/funtions';
 import UpdateTime from "./components/updatetime";
 import checkIfFirstLaunch from './utils/checkiffirstlaunch';
 
 export default class HomeScreen extends React.Component {
-    //todo: background script die kijkt of het al tijd is -> bericht sturen dat het zo ver is en vragen of de gebruiker een berichtje wilt sturen
     constructor(props) {
         super(props);
         this.state = {
@@ -17,14 +24,6 @@ export default class HomeScreen extends React.Component {
             keepAsFirstLaunch: false
         };
         this.date = new Date();
-    }
-
-    static navigationOptions = {
-        header: null,
-    };
-
-    componentDidMount() {
-        // this.getData();
     }
 
     async componentWillMount() {
@@ -54,21 +53,27 @@ export default class HomeScreen extends React.Component {
                 'Is het al zo ver?',
                 "Het is: " + timeHuman + " dus ja! HET IS ZO VER! Zou je het willen delen met je vrienden?",
                 [
-                    {text: 'Vraag het mij later', onPress: () => Alert.alert('Ja hallo... Ik ben toch niet je slaaf ofzo?')},
+                    {
+                        text: 'Vraag het mij later',
+                        onPress: () => Alert.alert('Ja hallo... Ik ben toch niet je slaaf ofzo?')
+                    },
                     {
                         text: 'Nee bedankt',
-                        onPress: () => console.log('Cancel Pressed'),
+                        onPress: () => {
+                            console.log('Cancel Pressed');
+                        },
                         style: 'cancel',
                     },
-                    {text: 'Sure, the more the merrier zeggen ze in Trumpland toch?', onPress: () => this.share('Hey, ik ben nu een biertje aan het drinken! Doe je mee? klink! 🍻')},
+                    {
+                        text: 'Sure, the more the merrier zeggen ze in Trumpland toch?',
+                        onPress: () => this.share('Hey, ik ben nu een biertje aan het drinken! Doe je mee? klink! 🍻')
+                    },
                 ],
                 {cancelable: false},
             );
         } else {
-            // console.log(this.state.allowedHours, this.state.allowedMinutes);
             return Alert.alert("Wel yes, but actually no");
         }
-        //Ten eerste is het altijd tijd voor bier! Echter zegt mijn baas anders. Volgens hem is het: <span>" + time + "</span>
     }
 
     async getData() {
@@ -77,13 +82,8 @@ export default class HomeScreen extends React.Component {
         let week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         let europeanWeekday = todayInt - 1;
         let today = week[europeanWeekday];
-        // let today = week[3];
         console.log(today);
         return UpdateTime._getData(today);
-        // .then((response) => {
-        //     this.setData(response);
-        //     log(response, 'fokking response getdata');
-        // })
     }
 
     async setData(response) {
@@ -107,10 +107,6 @@ export default class HomeScreen extends React.Component {
         if (!hasCheckedAsyncStorage) {
             return null;
         }
-        // dit haalt weg dat er onthouden wordt dat de app al gedraaid is
-        AsyncStorage.removeItem('hasLaunched');
-
-        const {navigate} = this.props.navigation;
 
         if (this.state.isFirstLaunch) {
             return (
@@ -119,7 +115,7 @@ export default class HomeScreen extends React.Component {
                     <Button
                         title={'done'}
                         onPress={() => {
-                            this.setState({keepAsFirstLaunch: false}, function () {
+                            this.setState({keepAsFirstLaunch: true}, function () {
                             });
 
                         }}
@@ -128,21 +124,24 @@ export default class HomeScreen extends React.Component {
             )
         } else {
             return (
-                <View style={styles.container}>
-                    <Button title={'Is het al tijd voor bier?'} onPress={() => {
-                        //todo: zorg er voor dat getdata eerst data haalt dan set en dan vraagt of het tijd is
+                <ImageBackground source={require('./components/images/beer.jpeg')}
+                                 style={{width: '100%', height: '100%'}}>
+                    <View style={styles.container}>
+                        <Button title={'Is het al tijd voor bier?'} onPress={() => {
+                            this.getData()
+                                .then(response => {
+                                    this.setData(response);
+                                    console.log('setdata')
+                                })
+                                .then(response => {
+                                    this.IsItTimeYet();
+                                    console.log('timeyes')
+                                });
 
-                        this.getData()
-                            .then(response => {
-                                this.setData(response)
-                                    .then(this.IsItTimeYet());
-                            })
-                    }}/>
-                    {/*<Button title={'checksettime'} onPress={() => this.getData()}/>*/}
-
-
-                    <Text>{this.state.allowedTime}</Text>
-                </View>
+                        }}/>
+                        <Text>{this.state.allowedTime}</Text>
+                    </View>
+                </ImageBackground>
             );
         }
     }
@@ -153,6 +152,5 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#b000b5',
     },
 });
