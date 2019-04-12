@@ -1,0 +1,4 @@
+endtime beertime omdat de biertime per dag staat ingesteld
+achtergrond script om te kijken het al tijd is en dan een bericht sturen dat het zo ver is!
+google calendar integatie?
+instellen instellen "het is altijd tijd voor bier"
