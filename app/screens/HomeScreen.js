@@ -26,6 +26,10 @@ export default class HomeScreen extends React.Component {
         this.date = new Date();
     }
 
+    static navigationOptions = {
+        header: null,
+    };
+
     async componentWillMount() {
         let isFirstLaunch = await checkIfFirstLaunch();
         if (!this.state.keepAsFirstLaunch) {
@@ -108,7 +112,7 @@ export default class HomeScreen extends React.Component {
             return null;
         }
 
-        if (this.state.isFirstLaunch) {
+        if (isFirstLaunch) {
             return (
                 <View>
                     <UpdateTime/>
