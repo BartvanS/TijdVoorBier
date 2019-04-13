@@ -13,6 +13,8 @@ import UpdateTime from "./components/updatetime";
 import checkIfFirstLaunch from './utils/checkiffirstlaunch';
 
 export default class HomeScreen extends React.Component {
+    //TODO: https://facebook.github.io/react-native/docs/headless-js-android
+    //dit gebruiken om te checken of het al tijd is en een berichtje te sturen!
     constructor(props) {
         super(props);
         this.state = {
@@ -28,9 +30,6 @@ export default class HomeScreen extends React.Component {
 
     async componentWillMount() {
         let isFirstLaunch = await checkIfFirstLaunch();
-        if (!this.state.keepAsFirstLaunch) {
-            isFirstLaunch = false;
-        }
         this.setState({isFirstLaunch, hasCheckedAsyncStorage: true});
     }
 
