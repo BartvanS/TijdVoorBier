@@ -69,7 +69,7 @@ export default class UpdateTime extends React.Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.updateTime}>
                 <Text>{this.state.selectedHours}:{this.state.selectedMinutes}</Text>
                 <TimePicker
                     selectedHours={parseInt(this.state.selectedHours)}
@@ -94,3 +94,9 @@ export default class UpdateTime extends React.Component {
         );
     }
 }
+
+const styles = StyleSheet.create({
+    updateTime: {
+        backgroundColor: '#d3c83d',
+    },
+});

@@ -6,6 +6,9 @@ export default class SettingsScreen extends React.Component {
     constructor(props) {
         super(props);
     }
+    static navigationOptions = {
+        title: "Settings",
+    };
 
     render() {
         return (
@@ -19,7 +22,7 @@ export default class SettingsScreen extends React.Component {
 const styles = StyleSheet.create({
     settings: {
         flex: 1,
-        backgroundColor: '#deec0d',
+        backgroundColor: '#d3d26a',
     },
 });
 

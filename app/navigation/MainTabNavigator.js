@@ -25,6 +25,7 @@ HomeStack.navigationOptions = {
 };
 
 
+
 const SettingsStack = createStackNavigator({
   Settings: SettingsScreen,
 });
