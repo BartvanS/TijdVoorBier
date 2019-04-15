@@ -11,34 +11,40 @@ import {
 import {checkTime} from './classes/funtions';
 import UpdateTime from "./components/updatetime";
 import checkIfFirstLaunch from './utils/checkiffirstlaunch';
+import {getDay, getStorage} from './utils/utils';
+
+
+const week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 export default class HomeScreen extends React.Component {
     //TODO: https://facebook.github.io/react-native/docs/headless-js-android
     //dit gebruiken om te checken of het al tijd is en een berichtje te sturen!
-    constructor(props) {
-        super(props);
-        this.state = {
-            allowedHours: 17,
-            allowedMinutes: 30,
-            // allowedTime: null,
-            isFirstLaunch: false,
-            hasCheckedAsyncStorage: false,
-            keepAsFirstLaunch: false
-        };
-        this.date = new Date();
-    }
 
     static navigationOptions = {
         header: null,
     };
 
-    async componentWillMount() {
+    constructor(props) {
+        super(props);
+        this.state = {
+            allowedHours: null,
+            allowedMinutes: null,
+            // allowedTime: null,
+            isFirstLaunch: false,
+            hasCheckedAsyncStorage: false,
+            keepAsFirstLaunch: false
+        };
+
+    }
+
+    async componentDidMount() {
         let isFirstLaunch = await checkIfFirstLaunch();
         this.setState({isFirstLaunch, hasCheckedAsyncStorage: true});
     }
 
+
     async IsItTimeYet() {
-        let date = this.date;
+        let date = new Date();
         let hours = date.getHours();
         let minutes = date.getMinutes();
         hours = checkTime(hours);
@@ -80,22 +86,31 @@ export default class HomeScreen extends React.Component {
     }
 
     async getData() {
-        let date = this.date;
-        let todayInt = date.getDay();
-        let week = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-        let europeanWeekday = todayInt - 1;
-        let today = week[europeanWeekday];
-        console.log(today);
-        return UpdateTime._getData(today);
+        // getStorage('alwaysTimeForBeer').then(response => {
+        //     console.log('getresp', response)
+        //
+        //     if (response === true) {
+        //         return 'alwaysTimeForBeer';
+        //     } else {
+                let today = getDay();
+                console.log(UpdateTime._getData(today))
+                return UpdateTime._getData(today);
+            // }
+        // });
     }
 
     async setData(response) {
-        let hours = response.substring(0, 2);
-        let minutes = response.substring(3, 5);
-        this.setState({
-            allowedHours: hours,
-            allowedMinutes: minutes,
-        });
+        console.log('test', response);
+        // if (response === 'alwaysTimeForBeer'){
+        //     console.log('yasss')
+        // }else {
+            let hours = response.substring(0, 2);
+            let minutes = response.substring(3, 5);
+            this.setState({
+                allowedHours: hours,
+                allowedMinutes: minutes,
+            });
+        // }
     }
 
     share(message) {
@@ -118,27 +133,26 @@ export default class HomeScreen extends React.Component {
                     <Button
                         title={'done'}
                         onPress={() => {
-                            this.setState({keepAsFirstLaunch: true}, function () {
-                            });
-
+                            // this.setState({keepAsFirstLaunch: true}, function () {
+                            // });
                         }}
                     />
                 </View>
             )
         } else {
             return (
-                <ImageBackground source={require('./components/images/beer.jpeg')}
-                                 style={{width: '100%', height: '100%'}}>
+                <ImageBackground
+                    source={require('./components/images/beer.jpeg')}
+                    style={{width: '100%', height: '100%'}}>
                     <View style={styles.container}>
                         <Button title={'Is het al tijd voor bier?'} onPress={() => {
                             this.getData()
                                 .then(response => {
+                                    console.log('response' , response);
                                     this.setData(response);
-                                    console.log('setdata')
                                 })
                                 .then(response => {
                                     this.IsItTimeYet();
-                                    console.log('timeyes')
                                 });
 
                         }}/>

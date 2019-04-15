@@ -1,14 +1,17 @@
 import React from 'react';
-import {StyleSheet, View,} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import UpdateTime from "./components/updatetime";
 
+
 export default class SettingsScreen extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     static navigationOptions = {
         title: "Settings",
     };
+
+    constructor(props) {
+        super(props);
+
+    }
 
     render() {
         return (
@@ -24,5 +27,5 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#d3d26a',
     },
-});
+ });
 

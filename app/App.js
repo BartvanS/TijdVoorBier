@@ -2,6 +2,7 @@ import React from 'react';
 import {Platform, StatusBar, StyleSheet, View, Text} from 'react-native';
 import {AppLoading, Asset, Font, Icon} from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+import {clearConsole} from "./screens/classes/funtions";
 
 export default class App extends React.Component {
     state = {
@@ -53,6 +54,7 @@ export default class App extends React.Component {
 
     _handleFinishLoading = () => {
         this.setState({isLoadingComplete: true});
+        clearConsole();
     };
 }
 
